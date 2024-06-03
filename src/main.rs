@@ -91,7 +91,7 @@ fn run() -> tungstenite::Result<()> {
     // loop on message receive -> TODO replace by event-driven style
     //
     loop {
-        let msg: Message = socket.read_message()?;
+        let msg: Message = socket.read()?;
         info!("Received msg: {}", msg);
         info!("Power.Trade websocket client sleeping [{} of {} epochs]", count, max_epoch);
         sleep( Duration::from_secs(2));

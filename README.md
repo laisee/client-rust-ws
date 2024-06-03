@@ -1,6 +1,8 @@
 # client-rust-ws
 Rust client for Power.Trade WS endpoint for Balance/Position data
 
+[![Rust](https://github.com/laisee/client-rust-ws/actions/workflows/rust.yml/badge.svg)](https://github.com/laisee/client-rust-ws/actions/workflows/rust.yml)
+
 Setup
 
 1. Download code from this repo

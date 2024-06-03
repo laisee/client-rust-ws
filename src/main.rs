@@ -1,14 +1,15 @@
 #![warn(unreachable_patterns)]
+include!(concat!(env!("OUT_DIR"), "/build_date.rs"));
 
-mod access;
+mod utils;
 
 use std::process::ExitCode;
 use std::{thread::sleep, time::Duration};
 use std::fs::File;
 use std::env::var;
 
-use clap::{Arg, Command, value_parser, ValueEnum};
-use access::generate_access_token;
+use clap::{value_parser, Arg, ArgAction, Command, ValueEnum};
+use utils::generate_access_token;
 use log::{error, info};
 use simplelog::*;
 use tungstenite::{client::IntoClientRequest, connect, http::HeaderValue, Message};
@@ -106,7 +107,10 @@ fn run() -> tungstenite::Result<()> {
 
 fn main()  -> ExitCode {
 
-    println!("Starting websocket client for power.trade");
+    let version_info: String = format!("version {} built on {}", env!("CARGO_PKG_VERSION"), BUILD_DATE);
+    let version_info: &'static str = Box::leak(version_info.into_boxed_str());
+
+    println!("Starting websocket client for power.trade [{:?}]", version_info);
 
     // Initialize the loggeing set file - replace hardcoded name with value from env settings (.env file)
     CombinedLogger::init(vec![WriteLogger::new(LevelFilter::Info, Config::default(), File::create("app.log").unwrap())]).unwrap();
@@ -118,18 +122,32 @@ fn main()  -> ExitCode {
         Production
     }
     // check ENV to be run && set env config file name based on ENV settings
-    let matches: clap::ArgMatches = Command::new("Power.Trade Environment Handler")
-        .version("1.0")
-        .about("Handles the PT_ENV argument")
+    let matches: clap::ArgMatches = Command::new("Power.Trade Websocket Client")
+        .version(&version_info)
+        .about("Handles the env argument")
         .arg(
-            Arg::new("PT_ENV").required(true).index(1).value_parser(value_parser!(Environment)),
+            Arg::new("env")
+                .action(ArgAction::Set)
+                .alias("environment")
+                .short('e')
+                .long("env")
+                .required(true)
+                .help("Select environment for the WS Client to run against")
+                .value_name("pt_env")
+                .value_parser(value_parser!(Environment))
+        )
+        .arg(Arg::new("custom-help")
+            .short('?')
+            .action(ArgAction::Help)
+            .display_order(100)  // Don't sort
+            .help("Alt help")
         )
         .get_matches();
 
-    // Retrieve the value of PT_ENV
-    let pt_env: &Environment = matches.get_one::<Environment>("PT_ENV").expect("PT_ENV is required");
+    // Retrieve the value of env
+    let pt_env: &Environment = matches.get_one::<Environment>("env").expect("env is required");
 
-    // Handle different values of PT_ENV
+    // Handle different values of env
     match pt_env {
         Environment::Development => {
             println!("Environment is set to DEV");
@@ -166,4 +184,14 @@ fn main()  -> ExitCode {
         }
     }
     ExitCode::from(0) // set exit status for any monitoring app on this code
+}
+
+// Tests module including dummy test
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn test_dummy_001() {
+        assert_eq!(true, true);
+    }
 }

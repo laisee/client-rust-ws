@@ -52,3 +52,24 @@ To run "debug" version: execute command "./target/debug/client-rust-ws --env tes
 To run "release" version: execute command "./target/release/client-rust-ws --env test" in project root/home folder. The environment can be changed to "production" also
 
 n.b. to view command line options e.g. available settings for environment ("--env") flag run the command without any settings ("./target/debug/client-rust-ws") or with no value added for environment flag ("./target/debug/client-rust-ws --env")
+
+12. Running the Rust WS Client against various power.trade endpoints
+
+The rust client can be configured to listen for any of the three content types below by setting the ennviroment variables named "PT_SERVER" to the URLs below in the relevant configurwtion file for test (".env.test") or production (".env.prod").
+
+N.B. Current Rust client only supports one of the 3 contents types per installed Rust code (under /target/release/ folder). Listening for more than one content from list below requires multiple copies of the Rust runtime files and a custom configuration per instance.
+
+Balances & Positions
+
+Test: wss://api.wss.test.power.trade/v1/position_summary
+Production: wss://api.wss.prod.power.trade/v1/position_summary
+
+Single Leg RFQs
+
+Test: wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0
+Production: wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0
+
+Multi Leg RFQs
+Test: wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0
+Production: wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0
+

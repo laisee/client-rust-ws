@@ -33,7 +33,7 @@ fn run() -> tungstenite::Result<()> {
     info!("connecting to {:?}", pt_server);
 
     // verify the server address is valid
-    let url = match Url::parse(&pt_server) {
+    let url: Url = match Url::parse(&pt_server) {
         Ok(url) => url,
         Err(error) => {
             panic!("Error parsing server address {:?} -> {:?}", &pt_server, error);
@@ -123,7 +123,7 @@ fn main()  -> ExitCode {
     }
     // check ENV to be run && set env config file name based on ENV settings
     let matches: clap::ArgMatches = Command::new("Power.Trade Websocket Client")
-        .version(&version_info)
+        .version(version_info)
         .about("Handles the env argument")
         .arg(
             Arg::new("env")

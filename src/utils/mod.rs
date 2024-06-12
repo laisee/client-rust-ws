@@ -7,7 +7,7 @@ use log::{error, info};
 use serde_json::{Map, Value};
 use std::time::Duration;
 
-pub fn generate_access_token(api_key: &str, pkey: String) -> String {
+pub fn generate_access_token(api_key: &str, pkey: &str) -> String {
 
     info!("Loading private key for account {}", api_key);
     let key: EcdsaPrivateKey = match EcdsaPrivateKey::from_pem(pkey.as_bytes()) {
@@ -16,8 +16,8 @@ pub fn generate_access_token(api_key: &str, pkey: String) -> String {
         }
         Err(e) => {
             // replace with error handling for invalid/missing private key
-            error!("Error while loading private key -> {}", e);
-            panic!("Error while loading private key for account {}", api_key);
+            error!("Error while loading private key -> {e}");
+            panic!("Error while loading private key for account {api_key}");
         }
     };
     let binding: HeaderAndClaims<Map<String, Value>> = HeaderAndClaims::new_dynamic();
@@ -32,7 +32,7 @@ pub fn generate_access_token(api_key: &str, pkey: String) -> String {
         .set_iss(String::from("app.power.trade"))
         .header_mut().alg ="ES256".to_string().into();
 
-    info!("Adding claims {:?} to signed JWT for account {}", claims, api_key);
+    info!("Adding claims {:#?} to signed JWT for account {api_key}", claims);
 
     let token: String = match sign( &mut claims, &key) {
         Ok(token) => {
@@ -40,7 +40,7 @@ pub fn generate_access_token(api_key: &str, pkey: String) -> String {
             token
         }
         Err(e) => {
-            error!("Error signing JWT with private key: {}", e);
+            error!("Error signing JWT with private key: {e}");
             "ERROR-Gen-JWT".to_string()
         }
     };

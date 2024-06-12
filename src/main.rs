@@ -11,11 +11,11 @@ use std::env::var;
 use clap::{value_parser, Arg, ArgAction, Command, ValueEnum};
 use utils::generate_access_token;
 use log::{error, info};
-use simplelog::*;
+use simplelog::{CombinedLogger, Config, LevelFilter, WriteLogger};
 use tungstenite::{client::IntoClientRequest, connect, http::HeaderValue, Message};
 use url::Url;
 
-/// run()
+/// `run()`
 ///
 /// # Panics
 ///
@@ -23,7 +23,7 @@ use url::Url;
 ///
 /// Parameters: None
 /// 
-/// Return value: tungstenite::Result 
+/// Return value: `tungstenite::Result`
 /// 
 fn run() -> tungstenite::Result<()> {
     
@@ -49,7 +49,7 @@ fn run() -> tungstenite::Result<()> {
         .expect("PT_API_SECRET must be set in the environment or .env file");
 
     // generate JWT token for authenticating at server
-    let token: String = generate_access_token(&api_key, api_secret);
+    let token: String = generate_access_token(&api_key, &api_secret);
 
     // log first X chars to assist with debugging issues
     info!("Token generated for account {:?}\n{:?} ", api_key, token.clone().truncate(50));
@@ -70,19 +70,18 @@ fn run() -> tungstenite::Result<()> {
     // setup loop for checking received messages 
     // n.b. to be replaced by event-driven code
     let mut count: i32 = 0;
-    const DEFAULT_EPOCH: i32 = 10000000;
     let max_epoch: i32 = match var("PT_EPOCH_COUNT") {
         Ok(max_epoch_str) => {
             match max_epoch_str.parse::<i32>() {
                 Ok(value) => value,
                 Err(error) => {
-                    println!("Error['{}'] while parsing 'PT_EPOCH_COUNT' - assigning default value of 10000000", error);
+                    println!("Error['{error}'] while parsing 'PT_EPOCH_COUNT' - assigning default value of 10000000");
                     DEFAULT_EPOCH
                 }
             }
         },
         Err(error) => {
-            println!("Error['{}'] while loading 'PT_EPOCH_COUNT' from environment - assigning default value of 10000000", error);
+            println!("Error['{error}'] while loading 'PT_EPOCH_COUNT' from environment - assigning default value of 10000000");
             DEFAULT_EPOCH // default value for epoch count
         }
     };
@@ -93,34 +92,41 @@ fn run() -> tungstenite::Result<()> {
     loop {
         let msg: Message = socket.read()?;
         info!("Received msg: {}", msg);
-        info!("Power.Trade websocket client sleeping [{} of {} epochs]", count, max_epoch);
-        sleep( Duration::from_secs(2));
+        println!("\tReceived msg containing {:?} bytes", msg.len());
+        println!("Power.Trade websocket client sleeping [{} of {} epochs]", count, max_epoch);
+        sleep(Duration::from_secs(2));
         count += 1;
         if count >= max_epoch {
-            println!("Power.Trade websocket client closing after count of {} epochs exceeded", count);
-            info!("\nPower.Trade websocket client closing after count of {} epochs exceeded\n", count);
+            println!("Power.Trade websocket client closing after count of {count} epochs exceeded");
+            info!("\nPower.Trade websocket client closing after count of {count} epochs exceeded\n");
             break;
         }
     }
     Ok(())
 }
 
+/// declare const & Enum variables before scope
+const DEFAULT_EPOCH: i32 = 10_000_000;
+
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
+enum Environment {
+    Development,
+    Test,
+    Production,
+}
+/// declaration before scope initiated
+
 fn main()  -> ExitCode {
 
     let version_info: String = format!("version {} built on {}", env!("CARGO_PKG_VERSION"), BUILD_DATE);
     let version_info: &'static str = Box::leak(version_info.into_boxed_str());
 
-    println!("Starting websocket client for power.trade [{:?}]", version_info);
+    println!("Starting websocket client for power.trade [{version_info:?}]");
 
     // Initialize the loggeing set file - replace hardcoded name with value from env settings (.env file)
     CombinedLogger::init(vec![WriteLogger::new(LevelFilter::Info, Config::default(), File::create("app.log").unwrap())]).unwrap();
 
-    #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
-    enum Environment {
-        Development,
-        Test,
-        Production
-    }
+
     // check ENV to be run && set env config file name based on ENV settings
     let matches: clap::ArgMatches = Command::new("Power.Trade Websocket Client")
         .version(version_info)
@@ -170,7 +176,7 @@ fn main()  -> ExitCode {
     let mut retries: i32 = 5; // replace with env var
     loop {
         match run() {
-            Ok(_) => break,
+            Ok(()) => break,
             Err(e) => {
                 error!("Error: {:?}", e);
                 if retries > 0 {

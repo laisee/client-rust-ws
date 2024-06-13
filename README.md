@@ -1,8 +1,8 @@
 # client-rust-ws
 
-[![Rust](https://github.com/laisee/client-rust-ws/actions/workflows/rust.yml/badge.svg)](https://github.com/laisee/client-rust-ws/actions/workflows/rust.yml)
-[![CI](https://github.com/laisee/client-rust-ws/actions/workflows/ci.yml/badge.svg)](https://github.com/laisee/client-rust-ws/actions/workflows/ci.yml)
-![Clippy](https://github.com/laisee/client-rust-ws/actions/workflows/clippy.yml/badge.svg)
+[![Cargo Build](https://github.com/laisee/client-rust-ws/actions/workflows/rust.yml/badge.svg)](https://github.com/laisee/client-rust-ws/actions/workflows/rust.yml)
+[![Cargo Test](https://github.com/laisee/client-rust-ws/actions/workflows/ci.yml/badge.svg)](https://github.com/laisee/client-rust-ws/actions/workflows/ci.yml)
+![Cargo Clippy](https://github.com/laisee/client-rust-ws/actions/workflows/clippy.yml/badge.svg)
 
 ## Rust client for Power.Trade WS endpoint for Balance/Position data
 

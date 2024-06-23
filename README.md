@@ -33,9 +33,9 @@ Setup
       ![image](https://github.com/laisee/client-rust-ws/assets/5905130/e5daa2a9-e374-4e7f-aaa6-f916da6da0a9)
 
 
-    => Running app on Prod env requires env file in root folder named ".env.test". 
-       Can be created by copying "env.example" sample file and and renaming to ".env.prod" 
-       Once the env file is created fill in values for: Api Key, Api Secret and WS server
+    => Running app on Prod env requires a .env file in root folder named ".env.prod". 
+       This file can be created by copying "env.example" sample file and and renaming to ".env.prod" 
+       Once the env file is created fill in values for: Api Key, Api Secret and WS server 
      
 8.  Run the code by this command "cargo run --ENV" where ENV is either 'test' or 'prod'
 

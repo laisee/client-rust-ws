@@ -72,22 +72,22 @@ Listening for more than one content from list below requires multiple copies of 
 
 ### Balances & Positions
 
-| Env | Link | Comment |
+| Env | Link | Notes |
 |-----|------|---------|
 | Test | wss://api.wss.test.power.trade/v1/position_summary |
 |Production | wss://api.wss.prod.power.trade/v1/position_summary |
 
 ### Single Leg RFQs
 
-| Env | Link | Comment |
+| Env | Link | Notes |
 |-----|------|---------|
-| Test | wss://api.wss.test.power.trade/v1/feeds/single_leg?type[]=cycle,single_leg_mbp_snapshot&mbp_period=1&mbo_period=0 | |
-| Production | wss://api.wss.prod.power.trade/v1/feeds/single_leg?type[]=cycle,single_leg_mbp_snapshot&mbp_period=1&mbo_period=0 | |
+| Test | wss://api.wss.test.power.trade/v1/feeds/?type[]=mbp_snapshot&tradeable_type[]=all_single_leg&mbp_period=1&mbo_period=0 | |
+| Production | wss://api.wss.prod.power.trade/v1/feeds/?type[]=mbp_snapshot&tradeable_type[]=all_single_leg&mbp_period=1&mbo_period=0 | |
 
 Multi Leg RFQs
 
-| Env | Link | Comment |
+| Env | Link | Notes |
 |-----|------|---------|
-| Test| wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0 | |
-| Production | wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0 | |
+| Test| wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0" | |
+| Production | wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0" | |
 

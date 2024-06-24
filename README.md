@@ -9,7 +9,7 @@
 
 ### Content provided (see endpoint links below)
 
-- Balance and Position data
+- Balance and Position data (see [here](https://power-trade.github.io/api-docs-source/ws_position_summary.html) for power.trade API docs on balances & positions
 - Single Leg RFQs (streaming quotes)
 - Multi Leg RFQs (streaming quotes)
    
@@ -72,21 +72,24 @@ Listening for more than one content from list below requires multiple copies of 
 
 ### Endpoint Links
 
-#### Balances & Positions
+#### _Balances & Positions_
+see [here](https://power-trade.github.io/api-docs-source/ws_position_summary.html) for power.trade API docs on balance and position data available from the following test & production API endpoints
+
+see [here](https://power-trade.github.io/api-docs-source/ws_position_summary.html#_sample_response) for details on WS response message 
 
 | Env | Link | Notes |
 |-----|------|---------|
 | Test | wss://api.wss.test.power.trade/v1/position_summary |
 |Production | wss://api.wss.prod.power.trade/v1/position_summary |
 
-#### Single Leg RFQs
+#### _Single Leg RFQs_
 
 | Env | Link | Notes |
 |-----|------|---------|
 | Test | wss://api.wss.test.power.trade/v1/feeds/?type[]=mbp_snapshot&tradeable_type[]=all_single_leg&mbp_period=1&mbo_period=0 | |
 | Production | wss://api.wss.prod.power.trade/v1/feeds/?type[]=mbp_snapshot&tradeable_type[]=all_single_leg&mbp_period=1&mbo_period=0 | |
 
-#### Multi Leg RFQs
+#### _Multi Leg RFQs_
 
 | Env | Link | Notes |
 |-----|------|---------|

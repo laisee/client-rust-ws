@@ -75,7 +75,7 @@ Listening for more than one content from list below requires multiple copies of 
 #### _Balances & Positions_
 see [here](https://power-trade.github.io/api-docs-source/ws_position_summary.html) for power.trade API docs on balance and position data available from the following test & production API endpoints
 
-see [here](https://power-trade.github.io/api-docs-source/ws_position_summary.html#_sample_response) for details on WS response message 
+see [here](https://power-trade.github.io/api-docs-source/ws_position_summary.html#_sample_response) for details on power.trade's balance & positions response message 
 
 | Env | Link | Notes |
 |-----|------|---------|

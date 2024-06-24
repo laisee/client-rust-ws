@@ -7,7 +7,7 @@
 
 ## Rust client for Power.Trade WS endpoints
 
-### Endpoints
+### Endpoints (see links below)
 
 - Balance and Position data
 - Single Leg RFQs (streaming quotes)
@@ -70,21 +70,23 @@ The rust client can be configured to listen for any of the three content types b
 N.B. Current Rust client only supports one of the three content types per installed Rust code (under /target/release/ folder). 
 Listening for more than one content from list below requires multiple copies of the Rust runtime files and a custom configuration per instance.
 
-### Balances & Positions
+### Links
+
+#### Balances & Positions
 
 | Env | Link | Notes |
 |-----|------|---------|
 | Test | wss://api.wss.test.power.trade/v1/position_summary |
 |Production | wss://api.wss.prod.power.trade/v1/position_summary |
 
-### Single Leg RFQs
+#### Single Leg RFQs
 
 | Env | Link | Notes |
 |-----|------|---------|
 | Test | wss://api.wss.test.power.trade/v1/feeds/?type[]=mbp_snapshot&tradeable_type[]=all_single_leg&mbp_period=1&mbo_period=0 | |
 | Production | wss://api.wss.prod.power.trade/v1/feeds/?type[]=mbp_snapshot&tradeable_type[]=all_single_leg&mbp_period=1&mbo_period=0 | |
 
-Multi Leg RFQs
+#### Multi Leg RFQs
 
 | Env | Link | Notes |
 |-----|------|---------|

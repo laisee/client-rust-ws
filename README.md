@@ -7,7 +7,7 @@
 
 ## Rust client for Power.Trade WS endpoints
 
-### Endpoints (see links below)
+### Content provided (see links below)
 
 - Balance and Position data
 - Single Leg RFQs (streaming quotes)

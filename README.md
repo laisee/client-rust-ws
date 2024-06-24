@@ -7,7 +7,7 @@
 
 ## Rust client for Power.Trade WS endpoints
 
-### Content provided (see links below)
+### Content provided (see endpoint links below)
 
 - Balance and Position data
 - Single Leg RFQs (streaming quotes)
@@ -70,7 +70,7 @@ The rust client can be configured to listen for any of the three content types b
 N.B. Current Rust client only supports one of the three content types per installed Rust code (under /target/release/ folder). 
 Listening for more than one content from list below requires multiple copies of the Rust runtime files and a custom configuration per instance.
 
-### Links
+### Endpoint Links
 
 #### Balances & Positions
 

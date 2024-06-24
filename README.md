@@ -5,9 +5,15 @@
 ![Cargo Clippy](https://github.com/laisee/client-rust-ws/actions/workflows/clippy.yml/badge.svg)[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
  
 
-## Rust client for Power.Trade WS endpoint for Balance/Position data
+## Rust client for Power.Trade WS endpoints
 
-Setup
+### Endpoints
+
+- Balance and Position data
+- Single Leg RFQs (streaming quotes)
+- Multi Leg RFQs (streaming quotes)
+   
+### Setup
 
 1. Download code from this repo
 
@@ -61,19 +67,27 @@ n.b. to view command line options e.g. available settings for environment ("--en
 
 The rust client can be configured to listen for any of the three content types below by setting the ennviroment variables named "PT_SERVER" to the URLs below in the relevant configurwtion file for test (".env.test") or production (".env.prod").
 
-N.B. Current Rust client only supports one of the 3 contents types per installed Rust code (under /target/release/ folder). Listening for more than one content from list below requires multiple copies of the Rust runtime files and a custom configuration per instance.
+N.B. Current Rust client only supports one of the three content types per installed Rust code (under /target/release/ folder). 
+Listening for more than one content from list below requires multiple copies of the Rust runtime files and a custom configuration per instance.
 
-Balances & Positions
+### Balances & Positions
 
-Test: wss://api.wss.test.power.trade/v1/position_summary
-Production: wss://api.wss.prod.power.trade/v1/position_summary
+| Env | Link | Comment |
+|-----|------|---------|
+| Test | wss://api.wss.test.power.trade/v1/position_summary |
+|Production | wss://api.wss.prod.power.trade/v1/position_summary |
 
-Single Leg RFQs
+### Single Leg RFQs
 
-Test: wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0
-Production: wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0
+| Env | Link | Comment |
+|-----|------|---------|
+| Test | wss://api.wss.test.power.trade/v1/feeds/single_leg?type[]=cycle,single_leg_mbp_snapshot&mbp_period=1&mbo_period=0 | |
+| Production | wss://api.wss.prod.power.trade/v1/feeds/single_leg?type[]=cycle,single_leg_mbp_snapshot&mbp_period=1&mbo_period=0 | |
 
 Multi Leg RFQs
-Test: wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0
-Production: wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0
+
+| Env | Link | Comment |
+|-----|------|---------|
+| Test| wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0 | |
+| Production | wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0 | |
 

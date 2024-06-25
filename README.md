@@ -9,9 +9,9 @@
 
 ### Content provided (see endpoint links below)
 
-- Balance and Position data (see [here](https://power-trade.github.io/api-docs-source/ws_position_summary.html) for power.trade API docs on balances & positions
-- Single Leg RFQs (streaming quotes)
-- Multi Leg RFQs (streaming quotes)
+- Balance and Position data  ->see [here](https://power-trade.github.io/api-docs-source/ws_position_summary.html) for power.trade API docs on balances & positions
+- Single Leg Orders/RFQs (streaming quotes) -> see [here] for power.trade API docs on streaming data for single leg orders & rfq quotes 
+- Multi Leg orders/RFQs (streaming quotes) -> see [here] for power.trade API docs on streaming data for multi leg orders & rfq quotes
    
 ### Setup
 
@@ -79,20 +79,24 @@ see [here](https://power-trade.github.io/api-docs-source/ws_position_summary.htm
 
 | Env | Link | Notes |
 |-----|------|---------|
-| Test | wss://api.wss.test.power.trade/v1/position_summary |
-|Production | wss://api.wss.prod.power.trade/v1/position_summary |
+| Test | wss://api.wss.test.power.trade/v1/position_summary | both balances & positions returned in one response |
+|Production | wss://api.wss.prod.power.trade/v1/position_summary | both balances & positions returned in one response |
 
-#### _Single Leg RFQs_
+#### _Single Leg Orders/RFQs_
 
-| Env | Link | Notes |
-|-----|------|---------|
-| Test | wss://api.wss.test.power.trade/v1/feeds/?type[]=mbp_snapshot&tradeable_type[]=all_single_leg&mbp_period=1&mbo_period=0 | |
-| Production | wss://api.wss.prod.power.trade/v1/feeds/?type[]=mbp_snapshot&tradeable_type[]=all_single_leg&mbp_period=1&mbo_period=0 | |
-
-#### _Multi Leg RFQs_
+n.b. to customize or filter  the data feed content see parameters documented at [this page](https://power-trade.github.io/api-docs-source/ws_feeds.html#Market_Feeds_Connection_Parameters) 
 
 | Env | Link | Notes |
 |-----|------|---------|
-| Test| wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0" | |
-| Production | wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=cycle,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0" | |
+| Test | wss://api.wss.test.power.trade/v1/feeds/?type[]=mbp_snapshot&tradeable_type[]=all_single_leg&mbp_period=1&mbo_period=0 | link returns all tradeable types with full price book snapshot sent but no order book snapshot|
+| Production | wss://api.wss.prod.power.trade/v1/feeds/?type[]=mbp_snapshot&tradeable_type[]=all_single_leg&mbp_period=1&mbo_period=0 | link returns all tradeable types with full price book snapshot sent but no order book snapshot |
+
+#### _Multi Leg orders/RFQs_
+
+n.b. to customize or filter  the data feed content see parameters documented at [this page](https://power-trade.github.io/api-docs-source/ws_feeds.html#Market_Feeds_Connection_Parameters) 
+
+| Env | Link | Notes |
+|-----|------|---------|
+| Test| wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=all_multi_leg,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0" | all multi-leg showing price book snapshot but not order book snapshot. add "market_id[]=none" to retireve RFQs  |
+| Production | wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=all_multi_leg,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0" | all multi-leg showing price book snapshot but not order book snapshot. add "market_id[]=none" to retireve RFQs|
 

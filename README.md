@@ -12,7 +12,11 @@
 - Balance and Position data  ->see [here](https://power-trade.github.io/api-docs-source/ws_position_summary.html) for power.trade API docs on balances & positions
 - Single Leg Orders/RFQs (streaming quotes) -> see [here] for power.trade API docs on streaming data for single leg orders & rfq quotes 
 - Multi Leg orders/RFQs (streaming quotes) -> see [here] for power.trade API docs on streaming data for multi leg orders & rfq quotes
-   
+
+### Sample Requests
+
+   See [this page](https://power-trade.github.io/api-docs-source/ws_feeds.html#Market_Feeds_Per_Symbol_Channels_Sample_Requests) for sample data feed requests
+  
 ### Setup
 
 1. Download code from this repo

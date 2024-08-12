@@ -4,16 +4,17 @@ include!(concat!(env!("OUT_DIR"), "/build_date.rs"));
 mod utils;
 
 use std::process::ExitCode;
-use std::{thread::sleep, time::Duration};
+use std::time::Duration;
+use std::thread::sleep;
 use std::fs::File;
 use std::env::var;
 
-use clap::{value_parser, Arg, ArgAction, Command, ValueEnum};
-use utils::generate_access_token;
+use clap::{value_parser, ValueEnum,  Arg, ArgAction, Command};
 use log::{error, info};
 use simplelog::{CombinedLogger, Config, LevelFilter, WriteLogger};
-use tungstenite::{client::IntoClientRequest, connect, http::HeaderValue, Message};
+use tungstenite::{client::IntoClientRequest, connect, http::HeaderValue};
 use url::Url;
+use utils::generate_access_token;
 
 /// `run()`
 ///
@@ -26,13 +27,50 @@ use url::Url;
 /// Return value: `tungstenite::Result`
 /// 
 fn run() -> tungstenite::Result<()> {
+    let mut count: i32 = 0;
+    let (max_epoch, sleep_duration) = get_epoch_count();
+    let mut socket: tungstenite::WebSocket<tungstenite::stream::MaybeTlsStream<std::net::TcpStream>> = get_socket()?;
     
-    // load target server based on env setting
-    let pt_server = var("PT_SERVER")
-        .expect("PT_SERVER must be set in the environment or .env file");
-    info!("connecting to {:?}", pt_server);
+    //
+    // loop on message receive -> TODO replace by event-driven style
+    //
+    loop {
+        match socket.read() {
+            Ok(msg) => {
+                if !msg.is_empty() {
+                    info!("Received msg: {}", msg);
+                    println!("Recvd msg containing {:?} bytes \n {msg:?}", msg.len());
+                } else {
+                    println!("Recvd empty msg {msg:?}");
+                }
+            }
+            Err(e) => {
+                info!("Error reading message: {}", e);
+                break;
+            }
+        }
+    
+        count += 1;
+        if count >= max_epoch {
+            println!("Power.Trade websocket client closing after {count} epochs exceeded");
+            info!("\nPower.Trade websocket client closing after {count} epochs exceeded\n");
+            break;
+        } else {
+            println!("Power.Trade websocket client sleeping for {sleep_duration} secs on iteration {count} of {max_epoch}");
+        }
+        sleep(Duration::from_secs(sleep_duration));
+    }
+    Ok(())
+}
 
-    // verify the server address is valid
+fn get_socket() -> Result<tungstenite::WebSocket<tungstenite::stream::MaybeTlsStream<std::net::TcpStream>>, tungstenite::Error> {
+    
+    //
+    // Assign server address for ws connection
+    //
+    let pt_server = var("PT_SERVER_URL")
+        .expect("PT_SERVER_URL must be set in the environment or .env file");
+    info!("connecting to {:?}", pt_server);
     let url: Url = match Url::parse(&pt_server) {
         Ok(url) => url,
         Err(error) => {
@@ -40,36 +78,52 @@ fn run() -> tungstenite::Result<()> {
         }
     };
 
-    // load Power.Trade API key && private key from env
+    //
+    // Assign API Key for ws connection
+    //
     let api_key= var("PT_API_KEY")
         .expect("PT_API_KEY must be set in the environment or .env file");
     info!("PT_API_KEY: {:?}", api_key);
-    
+
+    //
+    // Assign API Secret for signing request for ws connection
+    //
     let api_secret= var("PT_API_SECRET")
         .expect("PT_API_SECRET must be set in the environment or .env file");
-
-    // generate JWT token for authenticating at server
     let token: String = generate_access_token(&api_key, &api_secret);
-
-    // log first X chars to assist with debugging issues
     info!("Token generated for account {:?}\n{:?} ", api_key, token.clone().truncate(50));
 
-    // setup WS request with required Power.Trade header 
+    // 
+    // generate Request for connecting to PowerTrade WS
+    //
     let mut request = url.into_client_request()?;
     request.headers_mut().append("X-Power-Trade", HeaderValue::from_str(&token).unwrap());
 
+    //
+    // Initiate connection to WS @ PowerTrade 
+    //
     info!("Connecting to Power.Trade server: {}", &pt_server);
     println!("Connecting to Power.Trade server: {}", &pt_server);
-
-    let (mut socket, response) = connect(request)?;
+    
+    let (socket, response) = connect(request)?;
+    
     println!("Response from server {:?} -> {:?}", pt_server, response.status());
-
     info!("Power.Trade websocket client now active for server {}", &pt_server);
-    println!("Power.Trade websocket client now active for server {}", &pt_server);
 
-    // setup loop for checking received messages 
-    // n.b. to be replaced by event-driven code
-    let mut count: i32 = 0;
+    println!("Power.Trade websocket client now active for server {}", &pt_server);
+    Ok(socket)
+}
+
+fn get_epoch_count() -> (i32, u64) {
+    /// declare const & Enum variables before scope
+    const DEFAULT_EPOCH: i32 = 888_888;
+    let sleep = match var("PT_WS_SLEEP").expect("Error reading value 'WS_SLEEP' from env").parse::<u64>() {
+        Ok(num) => num,
+        Err(_) => {
+            eprintln!("Error: PT_WS_SLEEP must be a valid integer value");
+            60 // use default value if valid value not available
+        }
+    };
     let max_epoch: i32 = match var("PT_EPOCH_COUNT") {
         Ok(max_epoch_str) => {
             match max_epoch_str.parse::<i32>() {
@@ -85,28 +139,8 @@ fn run() -> tungstenite::Result<()> {
             DEFAULT_EPOCH // default value for epoch count
         }
     };
-    
-    //
-    // loop on message receive -> TODO replace by event-driven style
-    //
-    loop {
-        let msg: Message = socket.read()?;
-        info!("Received msg: {}", msg);
-        println!("\tReceived msg containing {:?} bytes", msg.len());
-        println!("Power.Trade websocket client sleeping [{} of {} epochs]", count, max_epoch);
-        sleep(Duration::from_secs(2));
-        count += 1;
-        if count >= max_epoch {
-            println!("Power.Trade websocket client closing after count of {count} epochs exceeded");
-            info!("\nPower.Trade websocket client closing after count of {count} epochs exceeded\n");
-            break;
-        }
-    }
-    Ok(())
+    (max_epoch, sleep)
 }
-
-/// declare const & Enum variables before scope
-const DEFAULT_EPOCH: i32 = 10_000_000;
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 enum Environment {
@@ -195,7 +229,6 @@ fn main()  -> ExitCode {
 // Tests module including dummy test
 #[cfg(test)]
 mod tests {
-
     #[test]
     fn test_dummy_001() {
         assert_eq!(true, true);

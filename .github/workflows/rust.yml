@@ -1,4 +1,4 @@
-name: Rust[1.56, stable]
+name: Rust[1.80, stable]
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        rust: ["1.56.0", "stable"]
+        rust: ["1.80.0", "stable"]
 
     steps:
     - uses: actions/checkout@v2

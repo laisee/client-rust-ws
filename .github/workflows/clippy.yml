@@ -1,4 +1,4 @@
-name: Clippy Code Analysis
+name: Code Analysis(Clippy)
 
 on:
   push:

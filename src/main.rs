@@ -10,7 +10,6 @@ use std::fs::File;
 use std::env::var;
 
 use clap::{value_parser, ValueEnum,  Arg, ArgAction, Command};
-use dotenvy;
 use log::{error, info};
 use simplelog::{CombinedLogger, Config, LevelFilter, WriteLogger};
 use tungstenite::{client::IntoClientRequest, connect, http::HeaderValue};

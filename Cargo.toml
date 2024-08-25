@@ -6,7 +6,6 @@ build = "src/build.rs"
 rust-version = "1.68.2"
 
 [dependencies]
-dotenv = "0.15.0"
 jwtk = "0.3.0"
 log = "0.4.21"
 serde = "1.0.203"
@@ -16,6 +15,7 @@ tungstenite = { version = "0.20.1", features = ["native-tls"] }
 url = "2.2"
 chrono = "0.4.38"
 clap = { version = "4.3.24", features = ["derive"] }
+dotenvy = "0.15.7"
 
 [build-dependencies]
 chrono = "0.4.31"

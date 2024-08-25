@@ -10,6 +10,7 @@ use std::fs::File;
 use std::env::var;
 
 use clap::{value_parser, ValueEnum,  Arg, ArgAction, Command};
+use dotenvy;
 use log::{error, info};
 use simplelog::{CombinedLogger, Config, LevelFilter, WriteLogger};
 use tungstenite::{client::IntoClientRequest, connect, http::HeaderValue};
@@ -192,15 +193,15 @@ fn main()  -> ExitCode {
         Environment::Development => {
             println!("Environment is set to DEV");
             // Load environment variables from .env file
-            dotenv::from_filename(".env.dev").expect("Failed to load env values from file '.env.dev'");
+            dotenvy::from_filename(".env.dev").expect("Failed to load env values from file '.env.dev'");
         },
         Environment::Test => {
             println!("Environment is set to TEST");
-            dotenv::from_filename(".env.test").expect("Failed to load env values from file '.env.test'");
+            dotenvy::from_filename(".env.test").expect("Failed to load env values from file '.env.test'");
         },
         Environment::Production => {
             println!("Environment is set to PROD");
-            dotenv::from_filename(".env.prod").expect("Failed to load env values from file '.env.prod'");
+            dotenvy::from_filename(".env.prod").expect("Failed to load env values from file '.env.prod'");
         },
     }
 

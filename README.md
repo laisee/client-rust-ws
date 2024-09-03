@@ -19,15 +19,17 @@ See [https://docs.api.power.trade/#Authentication](here) for an explanation.
 
 - Single Leg Orders/RFQs (streaming quotes)
 
-  See [here](https://docs.api.power.trade/#_processing_display_order_added) for power.trade API docs on streaming data for single leg orders & rfq quotes.
+  See [here](https://docs.api.power.trade/#_processing_display_order_added) for power.trade API docs on streaming data.
 
-  The WS message format can be found [here](https://docs.api.power.trade/#display_order_added)
+  The WS message format can be found at
+      [new order](https://docs.api.power.trade/#display_order_added) [order deleted](https://docs.api.power.trade/#display_order_added) [order executed](https://docs.api.power.trade/#display_order_added) [order update](https://docs.api.power.trade/#display_order_added)
    
-- Multi Leg orders/RFQs (streaming quotes) -> see [here] for power.trade API docs on streaming data for multi leg orders & rfq quotes
+- Multi Leg orders/RFQs (streaming quotes)
 
-  See [here](https://docs.api.power.trade/#_processing_display_order_added) for power.trade API docs on streaming data for single leg orders & rfq quotes.
+  See [here](https://docs.api.power.trade/#multi_leg_display_order_added) for power.trade API docs on streaming data.
 
-  The WS message format can be found [here](https://docs.api.power.trade/#display_order_added)
+  The WS message format for multi-leg orders can be found at:
+          [new order](https://docs.api.power.trade/#multi_leg_display_order_added) [order deleted](https://docs.api.power.trade/#multi_leg_display_order_deleted) [order executed](https://docs.api.power.trade/#multi_leg_display_order_executed) [order updated](https://docs.api.power.trade/#multi_leg_display_order_updated)
    
 ### Sample Requests
 
@@ -66,7 +68,7 @@ See [https://docs.api.power.trade/#Authentication](here) for an explanation.
        * Api Secret
        * WS Server address & port
 
-       API key to be used must be one of the REad-Only ones issued under '' dropdown for API type.
+       API key to be used must be one of the Read-Only ones issued under '' dropdown for API type.
        See example of UI fopr generating API Key below with correct settings for the WS Balance/Position API
 
       ![image](https://github.com/laisee/client-rust-ws/assets/5905130/e5daa2a9-e374-4e7f-aaa6-f916da6da0a9)

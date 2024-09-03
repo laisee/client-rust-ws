@@ -7,9 +7,13 @@
 
 ## Rust client for Power.Trade WS endpoints
 
+### Power.Trade WebSocket API documents
+
+See [here](https://docs.api.power.trade/#Introduction) for WS API documents
+
 ### Power.Trade Authentication
 
-See [https://docs.api.power.trade/#Authentication](here) for an explanation.
+See [here](https://docs.api.power.trade/#Authentication) for an explanation of the WS API authentication process @ power.trade.
 
 ### Content provided (see endpoint links below)
 

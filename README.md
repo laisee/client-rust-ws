@@ -1,6 +1,6 @@
 # client-rust-ws
 
-[![Rust[1.74.1, stable]](https://github.com/laisee/client-rust-ws/actions/workflows/rust.yml/badge.svg)](https://github.com/laisee/client-rust-ws/actions/workflows/rust.yml)
+[![Visits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Flaisee%2Fclient-rust-ws&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)[![Rust[1.74.1, stable]](https://github.com/laisee/client-rust-ws/actions/workflows/rust.yml/badge.svg)](https://github.com/laisee/client-rust-ws/actions/workflows/rust.yml)
 [![Cargo Test](https://github.com/laisee/client-rust-ws/actions/workflows/ci.yml/badge.svg)](https://github.com/laisee/client-rust-ws/actions/workflows/ci.yml)
 ![Cargo Clippy](https://github.com/laisee/client-rust-ws/actions/workflows/clippy.yml/badge.svg)[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)![MSRV](https://img.shields.io/badge/MSRV-1.74.1-orange)
  

@@ -149,7 +149,6 @@ enum Environment {
     Production,
 }
 /// declaration before scope initiated
-
 fn main()  -> ExitCode {
 
     let version_info: String = format!("version {} built on {}", env!("CARGO_PKG_VERSION"), BUILD_DATE);

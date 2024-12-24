@@ -3,7 +3,7 @@ name = "client-rust-ws"
 version = "0.1.7"
 edition = "2021"
 build = "src/build.rs"
-rust-version = "1.68.2"
+rust-version = "1.74.1"
 
 [dependencies]
 jwtk = "0.3.0"

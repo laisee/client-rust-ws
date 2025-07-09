@@ -4,10 +4,9 @@
 [![Cargo Test](https://github.com/laisee/client-rust-ws/actions/workflows/ci.yml/badge.svg)](https://github.com/laisee/client-rust-ws/actions/workflows/ci.yml)
 ![Cargo Clippy](https://github.com/laisee/client-rust-ws/actions/workflows/clippy.yml/badge.svg)[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)![MSRV](https://img.shields.io/badge/MSRV-1.74.1-orange)
  
+## Rust client for Power.Trade WS endpoints (v0.1.7)
 
-## Rust client for Power.Trade WS endpoints
-
-### Power.Trade WebSocket API documents
+### Power.Trade WebSocket API documents
 
 See [here](https://docs.api.power.trade/#Introduction) for WS API documents
 
@@ -59,18 +58,26 @@ See [here](https://docs.api.power.trade/#Authentication) for an explanation of t
    ```
 8. Before running the code configuration should be added to files (one per env)
 
+    => Running app on Development env requires env file in root folder named ".env.dev". 
+       Can be created by copying "env.example" sample file and renaming to ".env.dev" to setup dev env  
+
+       ```
+       cp .env.example .env.dev
+       ```
+
     => Running app on Test env requires env file in root folder named ".env.test". 
        Can be created by copying "env.example" sample file and renaming to ".env.test" to setup test env  
 
        ```
        cp .env.example .env.test
-
        ```
    
        Once the env file is created add values for:
-       * Api Key
-       * Api Secret
-       * WS Server address & port
+       * PT_API_KEY - API Key for authentication
+       * PT_API_SECRET - API Secret for authentication
+       * PT_SERVER_URL - WebSocket server address & port
+       * PT_EPOCH_COUNT - Number of cycles the app will run
+       * PT_WS_SLEEP - Sleep duration between message checks (in seconds)
 
        API key to be used must be one of the Read-Only ones issued under '' dropdown for API type.
        See example of UI fopr generating API Key below with correct settings for the WS Balance/Position API
@@ -83,16 +90,16 @@ See [here](https://docs.api.power.trade/#Authentication) for an explanation of t
    
        ```
        cp .env.example .env.prod
-
        ```
    
-       Once the env file is created add values for:
-       * Api Key
-       * Api Secret
-       * WS Server address & port 
+       Once the env file is created add the same values as mentioned above.
      
-10.  Run the code by this command "cargo run --ENV" where ENV is either 'test' or 'production'
+10.  Run the code by this command "cargo run -- --env ENV" where ENV is either 'development', 'test' or 'production'
 
+     ```
+     cargo run -- --env development
+     ```
+     or
      ```
      cargo run -- --env test
      ```
@@ -103,9 +110,9 @@ See [here](https://docs.api.power.trade/#Authentication) for an explanation of t
 
 12.  Some debug messages are printed at console, but most are copied to a logging file named "app.log" which is located in the root folder.
 
-13. App runs for XX cycles as it runs a loop sleeping and checking messages. 
+13. App runs for the number of cycles specified in PT_EPOCH_COUNT environment variable as it runs a loop sleeping and checking messages. 
 
-Change the 'PT_EPOCH_COUNT' environment value in .env files to make the app run longer or shorter duration. The loop is to be replaced by event-driven code shortly. Check this repo for changes
+Change the 'PT_EPOCH_COUNT' environment value in .env files to make the app run longer or shorter duration.
 
 11. Step 8 above can be replaced by running the generated binary which will be copied to the "target" folder under project root/home folder. 
 
@@ -115,18 +122,26 @@ To run "debug" version execute command
 ```
 ./target/debug/client-rust-ws --env test
 ```
-in the project root/home folder. The environment can be changed to "production" also as follows
+in the project root/home folder. The environment can be changed to "development" or "production" also as follows
+```
+./target/debug/client-rust-ws --env development
+```
+or
 ```
 ./target/debug/client-rust-ws --env production
 ```
 
-To run "release" version: execute command "./target/release/client-rust-ws --env test" in project root/home folder. The environment can be changed to "production" also
+To run "release" version: execute command 
+```
+./target/release/client-rust-ws --env test
+``` 
+in project root/home folder. The environment can be changed to "development" or "production" also.
 
 n.b. to view command line options e.g. available settings for environment ("--env") flag run the command without any settings ("./target/debug/client-rust-ws") or with no value added for environment flag ("./target/debug/client-rust-ws --env")
 
 12. Running the Rust WS Client against various power.trade endpoints
 
-The rust client can be configured to listen for any of the three content types below by setting the ennviroment variables named "PT_SERVER" to the URLs below in the relevant configurwtion file for test (".env.test") or production (".env.prod").
+The rust client can be configured to listen for any of the three content types below by setting the environment variable named "PT_SERVER_URL" to the URLs below in the relevant configuration file for development (".env.dev"), test (".env.test") or production (".env.prod").
 
 N.B. Current Rust client only supports one of the three content types per installed Rust code (under /target/release/ folder). 
 Listening for more than one set of content from list below requires multiple copies of the Rust runtime files and a custom configuration per instance.
@@ -158,6 +173,6 @@ n.b. to customize or filter  the data feed content see parameters documented at 
 
 | Env | Link | Notes |
 |-----|------|---------|
-| Test| wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=all_multi_leg,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0" | all multi-leg showing price book snapshot but not order book snapshot. add "market_id[]=none" to retireve RFQs  |
-| Production | wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=all_multi_leg,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0" | all multi-leg showing price book snapshot but not order book snapshot. add "market_id[]=none" to retireve RFQs|
+| Test| wss://api.wss.test.power.trade/v1/feeds/multi_leg?type[]=all_multi_leg,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0 | all multi-leg showing price book snapshot but not order book snapshot. add "market_id[]=none" to retireve RFQs  |
+| Production | wss://api.wss.prod.power.trade/v1/feeds/multi_leg?type[]=all_multi_leg,multi_leg_mbp_snapshot&mbp_period=1&mbo_period=0 | all multi-leg showing price book snapshot but not order book snapshot. add "market_id[]=none" to retireve RFQs|
 

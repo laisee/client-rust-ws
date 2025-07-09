@@ -26,6 +26,7 @@ use utils::generate_access_token;
 /// 
 /// Return value: `tungstenite::Result`
 /// 
+#[allow(clippy::result_large_err)]
 fn run() -> tungstenite::Result<()> {
     let mut count: i32 = 0;
     let (max_epoch, sleep_duration) = get_epoch_count();

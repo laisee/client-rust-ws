@@ -64,6 +64,7 @@ fn run() -> tungstenite::Result<()> {
     Ok(())
 }
 
+#[allow(clippy::result_large_err)]
 fn get_socket() -> Result<tungstenite::WebSocket<tungstenite::stream::MaybeTlsStream<std::net::TcpStream>>, tungstenite::Error> {
     
     //

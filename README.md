@@ -143,8 +143,101 @@ n.b. to view command line options e.g. available settings for environment ("--en
 
 The rust client can be configured to listen for any of the three content types below by setting the environment variable named "PT_SERVER_URL" to the URLs below in the relevant configuration file for development (".env.dev"), test (".env.test") or production (".env.prod").
 
-N.B. Current Rust client only supports one of the three content types per installed Rust code (under /target/release/ folder). 
+N.B. Current Rust client only supports one of the three content types per installed Rust code (under /target/release/ folder).
 Listening for more than one set of content from list below requires multiple copies of the Rust runtime files and a custom configuration per instance.
+
+### Testing
+
+The project includes comprehensive unit tests with **19.18% code coverage** (47/245 lines covered).
+
+#### Running Tests
+
+Run all tests with proper test isolation:
+```bash
+cargo test -- --test-threads=1
+```
+
+Run tests with verbose output:
+```bash
+cargo test -- --test-threads=1 --nocapture
+```
+
+Run a specific test:
+```bash
+cargo test test_from_env_success -- --nocapture
+```
+
+Run tests for a specific module:
+```bash
+cargo test config::tests -- --test-threads=1
+```
+
+#### Test Coverage
+
+Generate a detailed coverage report using `cargo-tarpaulin`:
+
+1. Install cargo-tarpaulin (one-time setup):
+   ```bash
+   cargo install cargo-tarpaulin
+   ```
+
+2. Generate coverage report:
+   ```bash
+   cargo tarpaulin --verbose --timeout 120 -- --test-threads=1
+   ```
+
+3. Generate HTML coverage report:
+   ```bash
+   cargo tarpaulin --out Html --output-dir coverage -- --test-threads=1
+   ```
+   Then open `coverage/index.html` in your browser.
+
+#### Current Test Coverage
+
+| Module | Coverage | Lines Covered |
+|--------|----------|---------------|
+| `src/config.rs` | 96.7% | 29/30 |
+| `src/utils/mod.rs` | 22.2% | 4/18 |
+| `src/websocket.rs` | 23.3% | 14/60 |
+| `src/error.rs` | 0% | 0/13 |
+| `src/logging.rs` | 0% | 0/17 |
+| `src/main.rs` | 0% | 0/107 |
+| **Overall** | **19.18%** | **47/245** |
+
+#### Test Suites
+
+**Configuration Tests** (13 tests)
+- Environment variable parsing and validation
+- Credential masking for security
+- Default value handling
+- Error handling for missing/invalid configuration
+
+**JWT Generation Tests** (3 tests)
+- Invalid private key handling
+- Empty key validation
+- Malformed PEM format detection
+
+**WebSocket Client Tests** (8 tests)
+- Configuration validation
+- URL format validation
+- Parameter validation (epoch count, sleep duration)
+
+#### Code Quality
+
+Run linting checks:
+```bash
+cargo clippy --all-targets --all-features -- -D warnings
+```
+
+Format code:
+```bash
+cargo fmt
+```
+
+Check formatting without making changes:
+```bash
+cargo fmt -- --check
+```
 
 ### Endpoint Links
 

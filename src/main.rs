@@ -8,6 +8,8 @@ use std::process::ExitCode;
 use std::time::Duration;
 use std::thread::sleep;
 use std::env::var;
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use clap::{value_parser, ValueEnum, Arg, ArgAction, Command};
 use log::{error, info};
@@ -22,23 +24,29 @@ mod build_date {
     include!(concat!(env!("OUT_DIR"), "/build_date.rs"));
 }
 
-fn run() -> Result<(), AppError> {
+fn run(shutdown: Arc<AtomicBool>) -> Result<(), AppError> {
     // Load configuration from environment
     let config = Config::from_env()?;
-    
+
     // Initialize WebSocket connection
     let mut client = WebSocketClient::new(config.clone())?;
-    
+
     // Log the configuration info
     info!("{}", client.get_config_info());
-    
+
     // Send an initial ping to verify connection
     client.send_ping_with_retry(3)?;
-    
+
     let mut count = 0;
-    
+
     // Main processing loop
     loop {
+        // Check for shutdown signal
+        if shutdown.load(Ordering::Relaxed) {
+            info!("Shutdown signal received, closing gracefully");
+            println!("Shutdown signal received, closing gracefully");
+            break;
+        }
         match client.read_message() {
             Ok(msg) => {
                 if !msg.is_empty() {
@@ -139,20 +147,26 @@ fn main() -> ExitCode {
     
     // Get environment and load appropriate .env file
     let pt_env = matches.get_one::<Environment>("env").expect("env is required");
-    
-    match pt_env {
+
+    let env_file = match pt_env {
         Environment::Development => {
             println!("Environment is set to DEV");
-            dotenvy::from_filename(".env.dev").expect("Failed to load env values from file '.env.dev'");
+            ".env.dev"
         },
         Environment::Test => {
             println!("Environment is set to TEST");
-            dotenvy::from_filename(".env.test").expect("Failed to load env values from file '.env.test'");
+            ".env.test"
         },
         Environment::Production => {
             println!("Environment is set to PROD");
-            dotenvy::from_filename(".env.prod").expect("Failed to load env values from file '.env.prod'");
+            ".env.prod"
         },
+    };
+
+    if let Err(e) = dotenvy::from_filename(env_file) {
+        eprintln!("Failed to load environment file '{}': {}", env_file, e);
+        eprintln!("Please ensure the file exists and is readable.");
+        return ExitCode::FAILURE;
     }
     
     // Setup logging
@@ -172,14 +186,24 @@ fn main() -> ExitCode {
         eprintln!("Failed to initialize logging: {}", e);
         return ExitCode::FAILURE;
     }
-    
+
+    // Setup graceful shutdown handler
+    let shutdown = Arc::new(AtomicBool::new(false));
+    let shutdown_clone = shutdown.clone();
+
+    ctrlc::set_handler(move || {
+        info!("Received interrupt signal (Ctrl+C)");
+        println!("\nReceived interrupt signal, shutting down gracefully...");
+        shutdown_clone.store(true, Ordering::Relaxed);
+    }).expect("Error setting Ctrl-C handler");
+
     // Run with retry logic
     let max_retries = var("PT_MAX_RETRIES").unwrap_or_else(|_| "5".to_string())
-        .parse::<i32>().unwrap_or(5);
-    
+        .parse::<u32>().unwrap_or(5);
+
     let mut retries = max_retries;
     loop {
-        match run() {
+        match run(shutdown.clone()) {
             Ok(()) => break,
             Err(e) => {
                 error!("Error: {}", e);

@@ -44,18 +44,14 @@ impl WebSocketClient {
         }
         
         // Validate other configuration parameters
-        if config.epoch_count <= 0 {
+        if config.epoch_count == 0 {
             return Err(AppError::Config("Epoch count must be positive".to_string()));
         }
-        
+
         if config.sleep_duration == 0 {
             return Err(AppError::Config("Sleep duration cannot be zero".to_string()));
         }
-        
-        if config.max_retries < 0 {
-            return Err(AppError::Config("Max retries cannot be negative".to_string()));
-        }
-        
+
         Ok(())
     }
     
@@ -66,8 +62,8 @@ impl WebSocketClient {
             .map_err(|e| AppError::Config(format!("Invalid server URL: {}", e)))?;
             
         // Generate authentication token
-        let token = generate_access_token(&config.api_key, &config.api_secret);
-        info!("Token generated for account {}", config.api_key);
+        let token = generate_access_token(&config.api_key, &config.api_secret)?;
+        info!("Token generated successfully");
         
         // Create request with authentication header
         let mut request = url.as_str().into_client_request()
@@ -114,9 +110,9 @@ impl WebSocketClient {
     }
     
     // Add a method that uses both write_message and reconnect
-    pub fn send_ping_with_retry(&mut self, max_attempts: i32) -> Result<(), AppError> {
+    pub fn send_ping_with_retry(&mut self, max_attempts: u32) -> Result<(), AppError> {
         let mut attempts = 0;
-        
+
         while attempts < max_attempts {
             match self.write_message(Message::Ping(vec![1, 2, 3].into())) {
                 Ok(_) => {
@@ -263,21 +259,7 @@ mod tests {
         }
     }
     
-    #[test]
-    fn test_validate_config_invalid_max_retries() {
-        let mut config = create_test_config();
-        config.max_retries = -1;
-        
-        let result = WebSocketClient::validate_config(&config);
-        assert!(result.is_err());
-        
-        match result {
-            Err(AppError::Config(msg)) => {
-                assert!(msg.contains("Max retries cannot be negative"));
-            },
-            _ => panic!("Expected Config"),
-        }
-    }
+    // Test removed: max_retries is now u32, so it cannot be negative
     
     #[test]
     fn test_config_info_format() {

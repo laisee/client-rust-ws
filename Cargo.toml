@@ -16,6 +16,7 @@ url = "2.2"
 chrono = "0.4.38"
 clap = { version = "4.3.24", features = ["derive"] }
 dotenvy = "0.15.7"
+ctrlc = "3.5.1"
 
 [build-dependencies]
 chrono = "0.4.31"

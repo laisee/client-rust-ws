@@ -70,7 +70,7 @@ impl WebSocketClient {
         info!("Token generated for account {}", config.api_key);
         
         // Create request with authentication header
-        let mut request = url.into_client_request()
+        let mut request = url.as_str().into_client_request()
             .map_err(|e| AppError::Connection(format!("Failed to create request: {}", e)))?;
             
         request.headers_mut().append(
@@ -118,7 +118,7 @@ impl WebSocketClient {
         let mut attempts = 0;
         
         while attempts < max_attempts {
-            match self.write_message(Message::Ping(vec![1, 2, 3])) {
+            match self.write_message(Message::Ping(vec![1, 2, 3].into())) {
                 Ok(_) => {
                     info!("Ping sent successfully");
                     return Ok(());

@@ -48,7 +48,7 @@ fn run() -> Result<(), AppError> {
                     // Send a pong response if we received a ping
                     if msg.is_ping() {
                         info!("Received ping, sending pong");
-                        if let Err(e) = client.write_message(Message::Pong(vec![])) {
+                        if let Err(e) = client.write_message(Message::Pong(vec![].into())) {
                             error!("Failed to send pong: {}", e);
                             // Try to reconnect if sending fails
                             if let Err(e) = client.reconnect() {
